@@ -18,34 +18,17 @@ rl.question('Загадано число в диапазоне от 0 до 100: 
     const guess = Number(answer);
     if (guess < num) {
       doPrompt('Больше \n')
-    } else if (guess > num) {
-      doPrompt('Меньше \n')
-    } else {
-      console.log(`Отгадано число ${num}`);
-      rl.close();
+      return;
     }
+    if (guess > num) {
+      doPrompt('Меньше \n')
+      return;
+    }
+    console.log(`Отгадано число ${num}`);
+    rl.close();
   }
 
   makeGuess(answer);
 
   rl.on('line', makeGuess)
 });
-
-//recursive implementation
-// const num = Math.round(Math.random()*100);
-
-// const game = (str) => {
-// const guess = Number(answer);
-//   rl.question(str, (answer) => {
-//     if (guess < num) {
-//       game('Больше \n')
-//     } else if (guess > num) {
-//       game('Меньше \n')
-//     } else {
-//       console.log(`Отгадано число ${num}`);
-//       rl.close();
-//     }
-//   });
-// }
-
-// game('Загадано число в диапазоне от 0 до 100: ')
