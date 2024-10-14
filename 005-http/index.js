@@ -1,24 +1,47 @@
 const http = require('http');
-const { url } = require('./config.js');
+const { createUrl } = require('./config.js');
 
-http.get(url, (res) => {
-  const {statusCode, statusMessage} = res;
+const readline = require('readline');
+const { stdin: input, stdout: output } = require('process');
+const rl = readline.createInterface({ input, output });
 
-  if (statusCode !== 200) {
-    console.log(`statusCode ${statusCode}, message ${statusMessage}`);
-    return;
-  }
+const doPrompt = (str) => {
+  rl.setPrompt(str);
+  rl.prompt();
+};
 
-  res.setEncoding('utf8');
-  let rawData = '';
-  res.on('data', (chunk) => {
-    rawData += chunk;
+rl.question('В каком городе узнать погоду? ', (answer) => {
+  const url = createUrl(answer);
+  makeRequest(url);
+
+  rl.on('line', (answer) => {
+    const url = createUrl(answer);
+    makeRequest(url)
   })
-  res.on('end', () => {
-    const {location: {name}, current: {temp_c, last_updated}} = JSON.parse(rawData);
-    const message = `The weather in ${name} at ${last_updated} is ${temp_c}°C`
-    console.log(message);
-  })
-}).on('error', (error) => {
-  console.log(error)
-})
+});
+
+const makeRequest = (url) => {
+  http.get(url, (res) => {
+    const {statusCode, statusMessage} = res;
+
+    res.setEncoding('utf8');
+    let rawData = '';
+    res.on('data', (chunk) => {
+      rawData += chunk;
+    })
+    res.on('end', () => {
+      if (statusCode !== 200) {
+        console.log(`statusCode ${statusCode}, message ${statusMessage}`);
+        rl.close();
+        return;
+      }
+      const {location: {name}, current: {temp_c, last_updated}} = JSON.parse(rawData);
+      const message = `The weather in ${name} at ${last_updated} is ${temp_c}°C`;
+      console.log(message);
+      doPrompt('В каком ещё городе узнать погоду? ')
+    })
+  }).on('error', (error) => {
+    console.log(error);
+    rl.close();
+  });
+}
