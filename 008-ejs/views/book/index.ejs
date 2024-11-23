@@ -1,0 +1,28 @@
+<% if (!books.length) { %>
+<h1 class="text-body-emphasis">Здесь пока пусто, добавьте книгу</h1>
+<% } else { %>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+  <% for( let i = 0; i < books.length; i++ ) { %>
+  <div class="col">
+    <div class="card shadow-sm">
+      <img width="100%" height="225" src="<%= books[i].fileCover %>" />
+      <div class="card-body">
+        <p class="card-text"><%= books[i].title %></p>
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-outline-secondary">
+              <a href="/books/<%= books[i].id %>">Посмотреть</a>
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary">
+              <a href="/books/update/<%= books[i].id %>">Редактировать</a>
+            </button>
+          </div>
+          <small class="text-body-secondary"><%= books[i].authors %></small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+</div>
+<% } %>
+<a href="./create" class="btn btn-primary btn-lg px-4">Добавить</a>
