@@ -1,6 +1,6 @@
 Используя Docker CLI выполните следующие действия:
 1. Загрузите образ node версии 15.14
-    docker pull node:15.14../
+    docker pull node:15.14
 2. Запустите контейнер с именем `first_node` из образа node версии 15.14 в фоновом режиме, подключив папку `data` из текущей директории в `/var/first/data` контейнера
     docker run -it --rm --name first_node -v $(pwd -W)/data:/var/first/data node:15.14
 3. Запустите контейнер с именем `second_node` из образа node версии 15.14 в фоновом режиме, подключив папку `data` из текущей директории в `/var/second/data` контейнера
