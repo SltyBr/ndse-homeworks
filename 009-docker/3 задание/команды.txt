@@ -1,0 +1,22 @@
+Используя Docker CLI выполните следующие действия:
+1. Загрузите образ node версии 15.14
+    docker pull node:15.14
+2. Запустите контейнер с именем `first_node` из образа node версии 15.14 в фоновом режиме, подключив папку `data` из текущей директории в `/var/first/data` контейнера
+    docker run -it --rm --name first_node -v $(pwd -W)/data:/var/first/data node:15.14
+3. Запустите контейнер с именем `second_node` из образа node версии 15.14 в фоновом режиме, подключив папку `data` из текущей директории в `/var/second/data` контейнера
+    docker run -it --rm --name second_node -v $(pwd -W)/data:/var/second/data node:15.14
+4. Подключитесь к контейнеру `first_node` с помощью exec и создайте текстовый файл любого содержания в `/var/first/data`
+    docker exec -it first_node bash
+    cd var/first/data
+    echo 'first node' > text.txt
+5. Добавьте еще один файл в папку `data` на хостовой машине
+6. Подключитесь к контейнеру `second_node` с помощью `exec` и получите список файлов в директории `/var/second/data`, выведете на экран содержимое файлов
+    docker exec -it second_node bash
+    cd var/second/data
+    echo 'second node' > text1.txt
+7. Остановите оба контейнера
+    docker stop $(docker ps -q)
+8. Удалите оба контейнера
+    удалились тк запускал с флагом -rm
+9. Удалите образ node версии 15.14
+    docker rmi node:15.14

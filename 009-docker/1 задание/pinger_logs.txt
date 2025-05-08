@@ -1,0 +1,24 @@
+PING netology.ru (51.250.51.8): 56 data bytes
+64 bytes from 51.250.51.8: seq=0 ttl=63 time=16.030 ms
+64 bytes from 51.250.51.8: seq=1 ttl=63 time=20.034 ms
+64 bytes from 51.250.51.8: seq=2 ttl=63 time=21.506 ms
+64 bytes from 51.250.51.8: seq=3 ttl=63 time=19.839 ms
+64 bytes from 51.250.51.8: seq=4 ttl=63 time=19.372 ms
+64 bytes from 51.250.51.8: seq=5 ttl=63 time=19.803 ms
+64 bytes from 51.250.51.8: seq=6 ttl=63 time=18.852 ms
+
+--- netology.ru ping statistics ---
+7 packets transmitted, 7 packets received, 0% packet loss
+round-trip min/avg/max = 16.030/19.348/21.506 ms
+PING netology.ru (51.250.51.8): 56 data bytes
+64 bytes from 51.250.51.8: seq=0 ttl=63 time=19.220 ms
+64 bytes from 51.250.51.8: seq=1 ttl=63 time=23.008 ms
+64 bytes from 51.250.51.8: seq=2 ttl=63 time=21.533 ms
+64 bytes from 51.250.51.8: seq=3 ttl=63 time=52.154 ms
+64 bytes from 51.250.51.8: seq=4 ttl=63 time=21.053 ms
+64 bytes from 51.250.51.8: seq=5 ttl=63 time=20.846 ms
+64 bytes from 51.250.51.8: seq=6 ttl=63 time=24.908 ms
+
+--- netology.ru ping statistics ---
+7 packets transmitted, 7 packets received, 0% packet loss
+round-trip min/avg/max = 19.220/26.103/52.154 ms

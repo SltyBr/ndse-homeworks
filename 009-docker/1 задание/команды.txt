@@ -1,0 +1,22 @@
+## Задание 1 - Docker CLI
+1. Загрузите образ `busybox` последней версии
+    docker run busybox
+2. Запустите новый контейнер `busybox` с командой `ping` сайта `netology.ru`, и количеством пингов 7, поименуйте контейнер `pinger`
+    docker run --name pinger busybox ping -c 7 netology.ru
+3. Выведите на список всех контейнеров - запущенных и остановленных
+    docker ps -a
+4. Выведите на экран логи контейнера с именем `pinger`
+    docker logs pinger > pinger_logs.txt
+5. Запустите второй раз контейнера с именем `pinger`
+    docker start -ai pinger
+6. Выведите на список всех контейнеров - запущенных и остановленных
+    docker ps -a > containers_list.txt
+7. Выведите на экран логи контейнера с именем `pinger`
+    docker logs pinger >> pinger_logs.txt
+8. Определите по логам общее количество запусков команды `ping` и какое общее количество отправленых запросов
+    docker logs pinger 2>&1 | grep -c "ping" = 2
+    docker logs pinger 2>&1 | grep -oP "(\d+) packets transmitted" | awk '{sum += $1} END {print sum}' = 14
+9. Удалите контейнер с именем `pinger`
+    docker rm pinger
+10. Удалите образ `busybox`
+    docker rm jolly_chaum
