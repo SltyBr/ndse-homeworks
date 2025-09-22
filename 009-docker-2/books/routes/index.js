@@ -1,13 +1,7 @@
 const router = require('express').Router();
 const fileMulter = require('../middleware/file');
 const { db } = require('../constants');
-const redis = require('redis');
-const REDIS_URL = process.env.REDIS_URL;
-const client = redis.createClient({ url: REDIS_URL });
-
-(async () => {
-  await client.connect();
-})();
+const { getCounter, incrementCounter } = require('../services/counter.service');
 
 const { Book } = require('../book');
 
@@ -61,16 +55,12 @@ router.get('/books/:id', async (req, res) => {
   const { id } = req.params;
   const idx = books.findIndex((book) => book.id === id);
   if (idx !== -1) {
-    try {
-      const connect = await client.incr(id);
-      console.log(id, connect)
-    } catch (e) {
-      console.error(`redis error ${e}`)
-    }
-
+    await incrementCounter(id);
+    const counter = await getCounter(id);
     res.render('book/view', {
       title: 'Просмотр книги',
       book: books[idx],
+      counter: counter.data.value,
     });
   } else {
     res.status(404).json('404 | страница не найдена');

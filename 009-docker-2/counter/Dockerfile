@@ -1,10 +1,13 @@
-FROM node:20.10
+FROM node:20.10-alpine
 
 WORKDIR /app
-ARG NODE_ENV=production
 
-COPY ./*.json ./
+COPY package.json ./
+
 RUN npm install
-COPY ./ ./
+
+COPY ./src src/
+
+EXPOSE 3001
 
 CMD ["npm", "run", "dev"]
