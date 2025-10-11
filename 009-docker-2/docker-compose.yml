@@ -1,0 +1,26 @@
+services:
+  storage:
+    image: redis
+    volumes:
+      - ./data:/data
+  books:
+    build: ./books
+    environment:
+      - PORT=3002
+      - COUNTER_URL=http://counter:3001
+      - NODE_ENV=development
+    ports:
+      - 3002:3002
+    depends_on:
+      - counter
+      - storage
+  counter:
+    build: ./counter
+    environment:
+      - PORT=3001
+      - REDIS_URL=redis://storage
+      - NODE_ENV=development
+    ports:
+      - 3001:3001
+    depends_on:
+      - storage

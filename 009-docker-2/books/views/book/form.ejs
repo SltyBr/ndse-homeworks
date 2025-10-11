@@ -1,0 +1,34 @@
+<form method="post" enctype="multipart/form-data">
+  <div class="mb-3">
+    <label class="form-label">Название</label>
+    <input required name="title" class="form-control" value="<%= book.title %>" />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Описание</label>
+    <input required name="description" class="form-control" value="<%= book.description %>"/>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Авторы</label>
+    <input required name="authors" class="form-control" value="<%= book.authors %>" />
+  </div>
+  <div class="mb-3">
+    <div class="form-check">
+        <label class="form-check-label" for="favorite">Добавить в избранное</label>
+        <input id="favorite" checked="<%= book.favorite %>" name="favorite" class="form-check-input" type="checkbox" value="">
+    </div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Загрузить обложку</label>
+    <input required name="fileCover" accept=".jpg,.png,.jpeg" type="file" class="form-control" />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Загрузить Книгу</label>
+    <input required name="fileName" type="file" class="form-control"/>
+  </div>
+  <button type="submit" class="btn btn-primary"><%= action %></button>
+</form>
+<% if (deleteAction) { %>
+ <form action="../delete/<%= book.id %>" method="post">
+   <button type="submit" class="btn btn-danger"><%= deleteAction %></button>
+ </form>
+<% } %>
