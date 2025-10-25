@@ -1,12 +1,10 @@
 const router = require('express').Router();
 const fileMulter = require('../middleware/file');
-const { db } = require('../constants');
 const { getCounter, incrementCounter } = require('../services/counter.service');
+const Book = require("../models/Book");
 
-const { Book } = require('../book');
-
-router.get('/books', (req, res) => {
-  const { books } = db;
+router.get('/books', async (req, res) => {
+  const books = await Book.find();
   res.render('index', {
     title: 'Просмотр книг',
     books,
@@ -33,7 +31,7 @@ router.post('/create',
       maxCount: 1
     }
   ]),
-  (req, res) => {
+  async (req, res) => {
     const {fileCover: [cover], fileName: [name]} = req.files;
     const { title, description, authors } = req.body;
     const coverPath = cover.path;
@@ -46,20 +44,24 @@ router.post('/create',
       fileName: originalname,
       fileBook: path
     });
-    db.books.push(book);
-    res.redirect('/books');
+
+    try {
+      await book.save();
+      res.redirect('/books');
+    } catch {
+      console.log('ошибка при сохранении')
+    }
 });
 
 router.get('/books/:id', async (req, res) => {
-  const { books } = db;
-  const { id } = req.params;
-  const idx = books.findIndex((book) => book.id === id);
-  if (idx !== -1) {
+	const { id } = req.params;
+	const book = await Book.findById(id);
+  if (book) {
     await incrementCounter(id);
     const counter = await getCounter(id);
     res.render('book/view', {
       title: 'Просмотр книги',
-      book: books[idx],
+      book,
       counter: counter.data.value,
     });
   } else {
@@ -67,31 +69,35 @@ router.get('/books/:id', async (req, res) => {
   }
 });
 
-router.get('/books/update/:id', (req, res) => {
-  const { books } = db;
-  const { id } = req.params;
-  const idx = books.findIndex((book) => book.id === id);
-  if (idx !== -1) {
+router.get('/books/update/:id', async (req, res) => {
+	const { id } = req.params;
+  
+  try {    
+    const book = await Book.findById(id);
+
     res.render('book/update', {
       title: 'Редактировать',
-      book: books[idx],
+      book,
       action: 'Редактировать',
       deleteAction: 'Удалить'
     });
-  } else {
+  } catch (e) {
     res.status(404).json('404 | страница не найдена');
   }
 });
 
-router.post('/books/delete/:id', (req, res) => {
-  const { books } = db;
-  const { id } = req.params;
-  const idx = books.findIndex((book) => book.id === id);
+router.post('/books/delete/:id', async (req, res) => {
+	const { id } = req.params;
+	const book = await Book.findById(id);
 
-  if (idx !== -1) {
-    books.splice(idx, 1);
+  try {
+    if (book) {
+      await Book.deleteOne({ _id: id });
+    }
+    res.redirect('/books');
+  } catch (e) {
+    console.log('ошибка при удалении ', e)
   }
-  res.redirect('/books');
 });
 
 module.exports = router;

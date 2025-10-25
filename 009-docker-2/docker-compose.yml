@@ -3,17 +3,29 @@ services:
     image: redis
     volumes:
       - ./data:/data
+
   books:
     build: ./books
     environment:
       - PORT=3002
       - COUNTER_URL=http://counter:3001
       - NODE_ENV=development
+      - DB_URL=mongodb://mongo:27017/
+      - DB_NAME=book_store
     ports:
       - 3002:3002
     depends_on:
       - counter
       - storage
+      - mongo
+    develop:
+      watch:
+        - action: rebuild
+          path: ./books
+          target: /app
+          ignore:
+            - node_modules/
+
   counter:
     build: ./counter
     environment:
@@ -24,3 +36,25 @@ services:
       - 3001:3001
     depends_on:
       - storage
+    develop:
+      watch:
+        - action: rebuild
+          path: ./counter
+          target: /app
+          ignore:
+            - node_modules/
+
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/
