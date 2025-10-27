@@ -44,7 +44,6 @@ services:
           ignore:
             - node_modules/
 
-
   mongo:
     image: mongo
     restart: always

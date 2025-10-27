@@ -5,18 +5,21 @@ const Book = require("../models/Book");
 
 router.get('/books', async (req, res) => {
   const books = await Book.find();
-  res.render('index', {
+
+  res.render('books/index', {
     title: 'Просмотр книг',
     books,
+    isAuthorized: !!req.user,
   });
 });
 
 router.get('/create', (req, res) => {
-  res.render('book/create', {
+  res.render('books/create', {
     title: 'Добавить книгу',
     book: {},
     action: 'Добавить',
     deleteAction: '',
+    isAuthorized: !!req.user,
   });
 });
 
@@ -59,10 +62,11 @@ router.get('/books/:id', async (req, res) => {
   if (book) {
     await incrementCounter(id);
     const counter = await getCounter(id);
-    res.render('book/view', {
+    res.render('books/view', {
       title: 'Просмотр книги',
       book,
       counter: counter.data.value,
+      isAuthorized: !!req.user,
     });
   } else {
     res.status(404).json('404 | страница не найдена');
@@ -75,11 +79,12 @@ router.get('/books/update/:id', async (req, res) => {
   try {    
     const book = await Book.findById(id);
 
-    res.render('book/update', {
+    res.render('books/update', {
       title: 'Редактировать',
       book,
       action: 'Редактировать',
-      deleteAction: 'Удалить'
+      deleteAction: 'Удалить',
+      isAuthorized: !!req.user,
     });
   } catch (e) {
     res.status(404).json('404 | страница не найдена');

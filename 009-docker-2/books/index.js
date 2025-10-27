@@ -1,16 +1,26 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const expressSession = require("express-session");
+const passport = require("./middleware/passport");
 
 const app = express();
 const error404 = require('./middleware/err-404');
-const indexRouter = require('./routes/index');
+const booksRouter = require('./routes/books');
+const userRouter = require('./routes/user');
 
 app.use(express.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
 
-app.use('/', indexRouter);
-app.use('/public', express.static(__dirname + '/public'))
-
+app.use(expressSession({
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use('/', booksRouter);
+app.use('/user', userRouter);
+app.use('/public', express.static(__dirname + '/public'));
 app.use(error404);
 
 const PORT = process.env.PORT || 3000;
