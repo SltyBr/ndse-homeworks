@@ -1,3 +1,6 @@
+<%- include('../shared/layout-start') %>
+<%- include('../shared/auth') %>
+
 <% if (!books.length) { %>
 <h1 class="text-body-emphasis">Здесь пока пусто, добавьте книгу</h1>
 <% } else { %>
@@ -26,3 +29,5 @@
 </div>
 <% } %>
 <a href="./create" class="btn btn-primary btn-lg px-4">Добавить</a>
+
+<%- include('../shared/layout-end') %>
