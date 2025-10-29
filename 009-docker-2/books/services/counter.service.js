@@ -1,20 +1,30 @@
 const axios = require('axios');
 const COUNTER_URL = process.env.COUNTER_URL;
 
-console.log('counter service init')
-
 const client = axios.create({
   baseURL: COUNTER_URL,
   timeout: 5000,
 })
 
 const getCounter = async (id) => {
-  const value = await client.get(`/counter/${id}`);
-  return value;
+  try {
+    const value = await client.get(`/counter/${id}`);
+    return value;
+  } catch (e) {
+    return {
+      data: {
+        value: 0,
+      }
+    };
+  }
 };
 
 const incrementCounter = async (id) => {
-  await client.post(`/counter/${id}/incr`);
+  try {
+    await client.post(`/counter/${id}/incr`);
+  } catch (e) {
+    console.log('counter service not available')
+  }
 };
 
 module.exports = {
