@@ -2,8 +2,13 @@ const express = require('express');
 const mongoose = require('mongoose');
 const expressSession = require("express-session");
 const passport = require("./middleware/passport");
+const http = require('http');
+const socketIo = require('socket.io');
 
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
+
 const error404 = require('./middleware/err-404');
 const booksRouter = require('./routes/books');
 const userRouter = require('./routes/user');
@@ -27,6 +32,27 @@ const PORT = process.env.PORT || 3000;
 const DB_URL = process.env.DB_URL;
 const DB_NAME = process.env.DB_NAME;
 
+io.on("connection", (socket) => {
+	const { id } = socket;
+
+	console.log(`Socket connected: ${id}`);
+
+	const { roomName } = socket.handshake.query;
+
+	console.log(`Socket roomName: ${roomName}`);
+
+	socket.join(roomName);
+
+	socket.on("message-to-room", (msg) => {
+		socket.to(roomName).emit("message-to-room", msg);
+		socket.emit("message-to-room", msg);
+	});
+
+	socket.on("disconnect", () => {
+		console.log(`Socket disconnected: ${id}`);
+	});
+});
+
 (async ()=> {
 	try {
 		await mongoose.connect(`${DB_URL}${DB_NAME}`);
@@ -36,6 +62,6 @@ const DB_NAME = process.env.DB_NAME;
 	}
 })();
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

@@ -19,5 +19,25 @@
       <p class="lead">Просмотры: <%= counter %></p>
     </div>
   </div>
+
+  <div id="comments"></div>
+
+  <div class="mb-3">
+    <input
+      id="username"
+      name="username"
+      class="form-control"
+      placeholder="username">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Комментарий</label>
+    <textarea
+      id="text"
+      name="text"
+      class="form-control"
+      rows="3"
+    ></textarea>
+  </div>
+  <button id="send" type="submit" class="btn btn-primary">Отправить</button>
 </div>
 <%- include('../shared/layout-end') %>

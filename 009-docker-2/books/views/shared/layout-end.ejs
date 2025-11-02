@@ -1,3 +1,50 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const initWebSocket = () => {
+            if (!location.pathname.includes("books/")) {
+                return;
+            }
+
+            const roomName = location.pathname.split('/').pop();
+            const socket = io.connect('/', { query: `roomName=${roomName}` });
+            const comments = document.getElementById('comments');
+            const username = document.getElementById('username');
+            const text = document.getElementById('text');
+            const sendBtn = document.getElementById('send');
+
+            if (!sendBtn) {
+                return;
+            }
+
+            const getTmp = (msg) => {
+                return `
+                    <div class="d-flex gap-2 w-100 justify-content-between mb-4">
+                        <div>
+                            <h6 class="mb-0">username: ${ msg.username }</h6>
+                            <p class="mb-0 opacity-75">message: ${ msg.text }</p>
+                        </div>
+                    </div>
+                `;
+            };
+
+            socket.on('message-to-room', (msg) => {
+                const div = getTmp(msg);
+                comments.insertAdjacentHTML('beforeend', div);
+                username.value = '';
+                text.value = '';
+            });
+
+
+            sendBtn.addEventListener('click', () => {
+                socket.emit('message-to-room', {
+                    username: username.value,
+                    text: text.value,
+                });
+            });
+        }
+
+        initWebSocket();
+    </script>
     </body>
 </html>
